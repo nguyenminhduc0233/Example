@@ -1,0 +1,14 @@
+<form-beans>
+    <form-bean name="loginForm" type="com.example.form.LoginForm"/>
+</form-beans>
+
+<action-mappings>
+    <action path="/login"
+            type="com.example.action.LoginAction"
+            name="loginForm"
+            validate="true"
+            input="/jsp/login.jsp">
+        <forward name="success" path="/jsp/userDetails.jsp"/>
+        <forward name="failure" path="/jsp/login.jsp"/>
+    </action>
+</action-mappings>
