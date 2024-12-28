@@ -1,0 +1,27 @@
+YourProject/
+├── src/
+│   ├── com/
+│   │   ├── example/
+│   │   │   ├── action/         
+│   │   │   │   ├── LoginAction.java
+│   │   │   ├── form/           
+│   │   │   │   ├── LoginForm.java
+│   │   │   ├── model/          
+│   │   │   │   ├── User.java
+│   │   │   ├── service/        
+│   │   │   │   ├── UserService.java
+│   │   │   │   ├── UserServiceImpl.java
+│   │   │   ├── dao/            
+│   │   │   │   ├── UserDAO.java
+│   │   │   │   ├── UserDAOImpl.java
+│   │   │   ├── config/         
+│   │   │   │   ├── AppConfig.java
+│   │   │   ├── resources/      
+│   │   │   │   ├── hibernate.cfg.xml
+│   │   │   ├── WebContent/     
+│   │   │   │   ├── WEB-INF/
+│   │   │   │   │   ├── struts-config.xml
+│   │   │   │   │   ├── spring-config.xml
+│   │   │   │   ├── jsp/
+│   │   │   │   │   ├── login.jsp
+│   │   │   │   │   ├── userDetails.jsp
