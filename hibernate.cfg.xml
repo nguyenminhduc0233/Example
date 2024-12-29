@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hibernate-configuration>
     <session-factory>
+        <!-- 1. Kết nối Database -->
         <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
         <property name="hibernate.connection.url">jdbc:sqlserver://localhost;databaseName=yourdb</property>
         <property name="hibernate.connection.username">sa</property>
         <property name="hibernate.connection.password">password</property>
+        
+        <!-- 2. Hibernate Dialect -->
         <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+        
+        <!-- 3. Tùy chọn Hibernate -->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
-
-        <mapping resource="com/example/model/User.hbm.xml"/>
+        
+        <!-- 4. Mapping Entity Class -->
+        <mapping class="com.example.model.User"/>
     </session-factory>
 </hibernate-configuration>
