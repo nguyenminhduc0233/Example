@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
@@ -6,6 +7,8 @@
         <property name="hibernate.connection.password">password</property>
         <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
         <property name="hibernate.show_sql">true</property>
-        <mapping class="com.example.model.User"/>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <mapping resource="com/example/model/User.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
