@@ -1,0 +1,99 @@
+Bước 1: Tạo Custom Servlet để Khởi Tạo Spring Context
+
+package com.example.config;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class SpringInitServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        try {
+            ServletContext context = getServletContext();
+            ApplicationContext springContext = new ClassPathXmlApplicationContext("/WEB-INF/spring-config.xml");
+            context.setAttribute("springContext", springContext);
+            System.out.println("[INFO] Spring Context Initialized Successfully!");
+        } catch (Exception e) {
+            throw new ServletException("[ERROR] Failed to initialize Spring Context!", e);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        System.out.println("[INFO] Spring Context Destroyed.");
+    }
+}
+
+Bước 2: Cập Nhật web.xml
+
+<web-app>
+
+    <!-- Khởi tạo Spring Context qua SpringInitServlet -->
+    <servlet>
+        <servlet-name>springInit</servlet-name>
+        <servlet-class>com.example.config.SpringInitServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- Khai báo ActionServlet của Struts -->
+    <servlet>
+        <servlet-name>action</servlet-name>
+        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+
+    <!-- Cấu hình trang mặc định -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+</web-app>
+
+Bước 3: Truy Cập Spring Context từ Struts Action
+
+package com.example.action;
+
+import javax.servlet.ServletContext;
+import org.springframework.context.ApplicationContext;
+import com.example.service.UserService;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionForm;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class UserAction extends Action {
+    
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 HttpServletRequest request, HttpServletResponse response) {
+        ServletContext context = servlet.getServletContext();
+        ApplicationContext springContext = (ApplicationContext) context.getAttribute("springContext");
+        
+        if (springContext == null) {
+            throw new IllegalStateException("Spring Context is not initialized!");
+        }
+        
+        // Lấy Spring Bean
+        UserService userService = (UserService) springContext.getBean("userService");
+        userService.performService();
+
+        return mapping.findForward("success");
+    }
+}
+
+
