@@ -96,4 +96,63 @@ public class UserAction extends Action {
     }
 }
 
+package com.example.config;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.XmlWebApplicationContext;
+import org.apache.struts.action.ActionServlet;
+
+public class SpringAwareActionServlet extends ActionServlet {
+    private static final String SPRING_CONTEXT_KEY = "SPRING_CONTEXT";
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        ServletContext context = getServletContext();
+
+        if (context.getAttribute(SPRING_CONTEXT_KEY) == null) {
+            XmlWebApplicationContext ctx = new XmlWebApplicationContext();
+            ctx.setServletContext(context);
+            ctx.setConfigLocation("/WEB-INF/spring-config.xml");
+            ctx.refresh();
+            context.setAttribute(SPRING_CONTEXT_KEY, ctx);
+        }
+    }
+}
+
+package com.example.action;
+
+import javax.servlet.ServletContext;
+import org.springframework.context.ApplicationContext;
+import com.example.service.UserService;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+
+public class UserAction extends Action {
+    private UserService userService;
+
+    public void initService(ServletContext context) {
+        ApplicationContext ctx = (ApplicationContext) context.getAttribute("SPRING_CONTEXT");
+        if (ctx != null) {
+            userService = (UserService) ctx.getBean("userService");
+        }
+    }
+
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 javax.servlet.http.HttpServletRequest request,
+                                 javax.servlet.http.HttpServletResponse response) {
+        if (userService == null) {
+            initService(request.getSession().getServletContext());
+        }
+
+        String result = userService.doSomething();
+        request.setAttribute("result", result);
+
+        return mapping.findForward("success");
+    }
+}
 
