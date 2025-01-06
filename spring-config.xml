@@ -30,7 +30,21 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <!-- 5. Enable Annotation-driven Transaction Management -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!-- 4. Cấu hình Advice cho Transaction Management -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="*" rollback-for="java.lang.Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 5. Cấu hình AOP để áp dụng Advice cho Service Layer -->
+    <aop:config>
+        <aop:pointcut id="serviceMethods"
+                      expression="execution(* com.example.service.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>
+    </aop:config>
 
 </beans>
