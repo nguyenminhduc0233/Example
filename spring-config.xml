@@ -30,21 +30,52 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <!-- 4. Cấu hình Advice cho Transaction Management -->
-    <tx:advice id="txAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="*" propagation="REQUIRED"/>
-            <tx:method name="get*" read-only="true"/>
-            <tx:method name="find*" read-only="true"/>
-            <tx:method name="*" rollback-for="java.lang.Exception"/>
-        </tx:attributes>
-    </tx:advice>
+   <!-- 1. Cấu hình TransactionInterceptor -->
+<bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+    <property name="transactionManager" ref="transactionManager" />
+    <property name="transactionAttributes">
+        <props>
+            <!-- Tất cả phương thức bắt đầu với 'save', 'update', 'delete' sẽ sử dụng PROPAGATION_REQUIRED -->
+            <prop key="save*">PROPAGATION_REQUIRED</prop>
+            <prop key="update*">PROPAGATION_REQUIRED</prop>
+            <prop key="delete*">PROPAGATION_REQUIRED</prop>
+            
+            <!-- Các phương thức bắt đầu với 'get', 'find', 'list' chỉ hỗ trợ giao dịch (readOnly) -->
+            <prop key="get*">PROPAGATION_SUPPORTS,readOnly</prop>
+            <prop key="find*">PROPAGATION_SUPPORTS,readOnly</prop>
+            <prop key="list*">PROPAGATION_SUPPORTS,readOnly</prop>
+            
+            <!-- Mặc định, các phương thức khác hỗ trợ giao dịch nếu có -->
+            <prop key="*">PROPAGATION_SUPPORTS</prop>
+        </props>
+    </property>
+</bean>
 
-    <!-- 5. Cấu hình AOP để áp dụng Advice cho Service Layer -->
-    <aop:config>
-        <aop:pointcut id="serviceMethods"
-                      expression="execution(* com.example.service.*.*(..))"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>
-    </aop:config>
+<!-- 2. Áp dụng TransactionInterceptor cho tất cả Service -->
+<bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="target">
+        <bean class="com.example.service.UserServiceImpl">
+            <property name="userDAO" ref="userDAO" />
+        </bean>
+    </property>
+    <property name="interceptorNames">
+        <list>
+            <value>transactionInterceptor</value>
+        </list>
+    </property>
+</bean>
+
+<bean id="customerService" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="target">
+        <bean class="com.example.service.CustomerServiceImpl">
+            <property name="customerDAO" ref="customerDAO" />
+        </bean>
+    </property>
+    <property name="interceptorNames">
+        <list>
+            <value>transactionInterceptor</value>
+        </list>
+    </property>
+</bean>
 
 </beans>
