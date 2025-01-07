@@ -17,6 +17,14 @@
         
         <!-- Tạo bảng tự động (nếu cần) -->
         <property name="hibernate.hbm2ddl.auto">update</property>
+
+        Phải là false để Hibernate quản lý giao dịch.
+        <property name="hibernate.connection.autocommit">false</property>
+        Đảm bảo flush dữ liệu trước khi commit.
+        <property name="hibernate.transaction.flush_before_completion">true</property>
+        Đảm bảo session được đóng sau khi kết thúc transaction.
+        <property name="hibernate.transaction.auto_close_session">true</property>
+
         
         <!-- Mapping Entity -->
         <mapping class="com.example.model.User"/>
