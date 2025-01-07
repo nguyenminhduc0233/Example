@@ -78,4 +78,30 @@
     </property>
 </bean>
 
+       <!-- Kích hoạt AOP -->
+<aop:config>
+    <!-- Áp dụng giao dịch cho tất cả các lớp trong package com.example.service -->
+    <aop:pointcut id="serviceMethods" expression="execution(* service.*.*(..))" />
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods" />
+</aop:config>
+
+<!-- Advice cho giao dịch -->
+<tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+        <!-- Các phương thức cập nhật (CRUD) -->
+        <tx:method name="save*" propagation="REQUIRED"/>
+        <tx:method name="update*" propagation="REQUIRED"/>
+        <tx:method name="delete*" propagation="REQUIRED"/>
+        
+        <!-- Các phương thức chỉ đọc -->
+        <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+        <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+        <tx:method name="list*" propagation="SUPPORTS" read-only="true"/>
+        
+        <!-- Mặc định cho tất cả phương thức khác -->
+        <tx:method name="*" propagation="SUPPORTS"/>
+    </tx:attributes>
+</tx:advice>
+
+       
 </beans>
