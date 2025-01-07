@@ -1,0 +1,12 @@
+log4j.properties
+# Hiển thị trạng thái giao dịch
+log4j.logger.org.springframework.transaction=DEBUG
+log4j.logger.org.springframework.orm.hibernate5=DEBUG
+log4j.logger.org.hibernate.transaction=DEBUG
+log4j.logger.org.hibernate.engine.transaction.internal.TransactionImpl=DEBUG
+
+logback.xml
+<logger name="org.springframework.transaction" level="DEBUG"/>
+<logger name="org.springframework.orm.hibernate5" level="DEBUG"/>
+<logger name="org.hibernate.transaction" level="DEBUG"/>
+<logger name="org.hibernate.engine.transaction.internal.TransactionImpl" level="DEBUG"/>
