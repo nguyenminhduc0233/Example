@@ -1,55 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>jqGrid Column Swap</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-ui-dist/jquery-ui.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/free-jqgrid/dist/css/ui.jqgrid.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jqGrid Customer List</title>
+
+    <!-- jQuery & jqGrid -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.5/css/ui.jqgrid.min.css">
+
+    <!-- File CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <button onclick="swapColumns()">Swap Columns</button>
-  <table id="a"></table>
+    <table id="customerTable"></table>
 
-  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery-ui-dist/jquery-ui.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/free-jqgrid/dist/jquery.jqgrid.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      const grid = $("#a");
+    <!-- jQuery & jqGrid Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.5/jquery.jqgrid.min.js"></script>
 
-      grid.jqGrid({
-        datatype: "local",
-        colNames: ["ID", "Name", "Age", "Email"],
-        colModel: [
-          { name: "id", index: "id", width: 50 },
-          { name: "name", index: "name", width: 150 },
-          { name: "age", index: "age", width: 50 },
-          { name: "email", index: "email", width: 200 }
-        ],
-        data: [
-          { id: 1, name: "Alice", age: 25, email: "alice@example.com" },
-          { id: 2, name: "Bob", age: 30, email: "bob@example.com" }
-        ],
-        rowNum: 1000,
-        pager: null,
-        caption: "",
-        height: "auto"
-      });
-    });
-
-    function swapColumns() {
-      const grid = $("#a");
-
-      // Danh sách thứ tự cột mong muốn
-      const newOrder = ["name", "email", "id", "age"];
-      const currentOrder = $("#a").jqGrid("getGridParam", "colModel").map(col => col.name);
-
-      // Tạo mảng index mới
-      const newIndexMap = newOrder.map(colName => currentOrder.indexOf(colName));
-
-      // Hoán đổi cột
-      grid.jqGrid("remapColumns", newIndexMap, true, false);
-    }
-  </script>
+    <!-- File JavaScript -->
+    <script src="scripts.js"></script>
 </body>
 </html>
+
+
+// Danh sách customer
+var customers = [
+    { id: 1, name: "Nguyễn Văn A", sex: "Nam", address: "Hà Nội" },
+    { id: 2, name: "Trần Thị B", sex: "Nữ", address: "Hồ Chí Minh" },
+    { id: 3, name: "Lê Văn C", sex: "Nam", address: "Đà Nẵng" }
+];
+
+// Mảng các cột cần hiển thị (có thể thay đổi)
+var visibleColumns = ["sex", "id","name"];
+
+// Map tên cột hiển thị
+var columnNames = {
+    id: "ID",
+    name: "Tên",
+    sex: "Giới tính",
+    address: "Địa chỉ"
+};
+
+// Tạo danh sách cột hiển thị dựa trên visibleColumns
+var colModel = visibleColumns.map(field => ({
+    name: field,
+    index: field,
+    label: columnNames[field] || field,
+    width: 100
+}));
+
+// Khởi tạo jqGrid
+$(document).ready(function () {
+    $("#customerTable").jqGrid({
+        datatype: "local",
+        data: customers,
+        colModel: colModel,
+        viewrecords: true,
+        height: "auto",
+        rowNum: 10,
+        loadComplete: function () {
+            // Bỏ style mặc định của jqGrid (nếu cần)
+            $(".ui-jqgrid").css("border", "none");
+        }
+    });
+});
+
+
+/* Đảm bảo bảng không vượt quá màn hình */
+.ui-jqgrid {
+    width: 90% !important;
+    max-width: 90%;
+    overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+    margin: 0 auto;
+}
+
+#customerTable {
+    width: 100%; /* Bảng chiếm toàn bộ container */
+    max-width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #333;
+}
+
+/* Header của bảng */
+.ui-jqgrid .ui-jqgrid-htable th {
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* Các dòng dữ liệu */
+.ui-jqgrid-btable tr.jqgrow td {
+    padding: 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Màu xen kẽ */
+.ui-jqgrid-btable tr:nth-child(even) td {
+    background-color: #f2f2f2;
+}
+
+/* Hover */
+.ui-jqgrid-btable tr:hover td {
+    background-color: #ddd;
+    cursor: pointer;
+}
