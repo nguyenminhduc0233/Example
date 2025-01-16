@@ -110,3 +110,17 @@ $(document).ready(function () {
     background-color: #ddd;
     cursor: pointer;
 }
+
+
+<script>
+    var customers = [
+        <c:forEach var="customer" items="${customerForm.customerList}" varStatus="status">
+            {
+                "id": "${customer.id}",
+                "name": "${customer.name}",
+                "sex": "${customer.sex}",
+                "address": "${customer.address}"
+            }<c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
+</script>
