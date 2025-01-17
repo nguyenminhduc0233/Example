@@ -124,3 +124,13 @@ $(document).ready(function () {
         </c:forEach>
     ];
 </script>
+
+
+const arr = ["123,nam", "234,duc", "345,hiep"];
+
+const listcustomer = arr.map(item => {
+    const [id, name] = item.split(",");
+    return { customer: { id, name } };
+});
+
+console.log(listcustomer);
