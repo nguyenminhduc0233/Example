@@ -27,3 +27,43 @@
     </bean>
 
 </beans>
+
+
+
+package com.example.action;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.example.service.UserService;
+
+public class UserAction extends Action {
+    private static ApplicationContext context = null;
+    private static UserService userService = null;
+
+    public UserAction() {
+        if (context == null) {
+            context = new ClassPathXmlApplicationContext("/WEB-INF/applicationContext.xml");
+            userService = (UserService) context.getBean("userService");
+        }
+    }
+
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form,
+                                 HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        boolean success = userService.login(username, password);
+        if (success) {
+            return mapping.findForward("success");
+        } else {
+            return mapping.findForward("failure");
+        }
+    }
+}
