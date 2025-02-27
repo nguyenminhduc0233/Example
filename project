@@ -1,136 +1,158 @@
-📌 1. Cấu hình web.xml (Không dùng <listener>)
-Bạn chỉ giữ nguyên cấu hình Struts 1, không cần thêm bất kỳ <listener> nào.
-📌 File web.xml
+1. Các File JAR Cần Tải
+Bạn cần tải các thư viện sau:
 
-<web-app>
-    <display-name>Struts 1 + Spring Boot</display-name>
+Các thư viện JPA & Hibernate (Bắt buộc)
 
-    <!-- Cấu hình Struts 1 -->
-    <servlet>
-        <servlet-name>action</servlet-name>
-        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
-        <init-param>
-            <param-name>config</param-name>
-            <param-value>/WEB-INF/struts-config.xml</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>action</servlet-name>
-        <url-pattern>*.do</url-pattern>
-    </servlet-mapping>
-</web-app>
+Jakarta Persistence API (JPA)	jakarta.persistence-api
+Hibernate Core	                hibernate-core
+Hibernate Entity Manager	    hibernate-entitymanager
 
 
+Driver JDBC cho MS SQL Server
 
-📌 2. Tự khởi tạo Spring Boot trong ActionServlet
-Vì bạn không thể dùng <listener>, bạn phải tự khởi tạo ApplicationContext trong ActionServlet.
+Microsoft SQL Server JDBC Driver	mssql-jdbc
 
-📌 File CustomActionServlet.java
 
-package com.example.config;
+Thư viện Logging (Cần thiết cho Hibernate)
 
-import javax.servlet.ServletException;
-import org.apache.struts.action.ActionServlet;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+SLF4J API	                slf4j-api
+SLF4J Simple Logger	        slf4j-simple
+2. Các File Cần Tạo
+Dưới đây là danh sách các file cần tạo trong project Java không dùng Maven.
 
-public class CustomActionServlet extends ActionServlet {
+Cấu trúc thư mục
+css
+Sao chép
+Chỉnh sửa
+YourProject/
+├── src/
+│   ├── com/
+│   │   ├── example/
+│   │   │   ├── entity/
+│   │   │   │   ├── User.java
+│   │   │   ├── util/
+│   │   │   │   ├── JPAUtil.java
+│   │   │   ├── MainApplication.java
+├── libs/  (Chứa các file JAR đã tải)
+├── META-INF/
+│   ├── persistence.xml
+├── bin/  (Chứa file biên dịch)
+3. Nội Dung Các File
+(1) File persistence.xml (trong META-INF/)
+Cấu hình kết nối MS SQL Server cho Hibernate.
 
-    private static ApplicationContext springContext;
+xml
+Sao chép
+Chỉnh sửa
+<persistence xmlns="http://jakarta.ee/xml/ns/persistence"
+             version="3.0">
+    <persistence-unit name="my-persistence-unit">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <properties>
+            <!-- Driver cho MS SQL Server -->
+            <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+            
+            <!-- Chuỗi kết nối đến MS SQL Server -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=your_database;encrypt=true;trustServerCertificate=true"/>
+            
+            <!-- Thông tin đăng nhập -->
+            <property name="jakarta.persistence.jdbc.user" value="your_username"/>
+            <property name="jakarta.persistence.jdbc.password" value="your_password"/>
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        // Khởi tạo Spring Boot Context
-        springContext = new AnnotationConfigApplicationContext(SpringBootConfig.class);
+            <!-- Cấu hình Hibernate -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
+(2) File User.java (Entity)
+java
+Sao chép
+Chỉnh sửa
+package com.example.entity;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+    private String email;
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
     }
 
-    public static ApplicationContext getSpringContext() {
-        return springContext;
+    public void setId(Long id) {
+        this.id = id;
     }
-}
-Sau đó, thay đổi web.xml để sử dụng CustomActionServlet thay vì ActionServlet mặc định.
 
-📌 Chỉnh sửa web.xml
-
-<servlet>
-    <servlet-name>action</servlet-name>
-    <servlet-class>com.example.config.CustomActionServlet</servlet-class>
-    <init-param>
-        <param-name>config</param-name>
-        <param-value>/WEB-INF/struts-config.xml</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-</servlet>
-
-
-📌 3. Cấu hình Spring Boot
-Bạn có thể sử dụng Spring Boot bình thường bằng Annotation mà không cần applicationContext.xml.
-
-📌 File SpringBootConfig.java
-
-package com.example.config;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import javax.sql.DataSource;
-
-@Configuration
-@ComponentScan(basePackages = "com.example")
-public class SpringBootConfig {
-
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        dataSource.setUrl("jdbc:sqlserver://localhost:1433;databaseName=mydb");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("password123");
-        return dataSource;
+    public String getUsername() {
+        return username;
     }
-}
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-📌 4. Gọi Spring Boot từ Struts 1
-Khi cần lấy Spring Bean trong Action, bạn chỉ cần gọi CustomActionServlet.getSpringContext().
+    public String getEmail() {
+        return email;
+    }
 
-📌 File LoginAction.java
-
-package com.example.action;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import com.example.config.CustomActionServlet;
-import com.example.service.UserService;
-
-public class LoginAction extends Action {
-    @Override
-    public ActionForward execute(ActionMapping mapping, ActionForm form, 
-                                 HttpServletRequest request, HttpServletResponse response) {
-        // Lấy Bean từ Spring Context
-        UserService userService = CustomActionServlet.getSpringContext().getBean(UserService.class);
-
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        if (userService.login(username, password)) {
-            return mapping.findForward("success");
-        } else {
-            return mapping.findForward("error");
-        }
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
-📌 Cấu hình struts-config.xml
+(3) File JPAUtil.java (Kết nối JPA)
+java
+Sao chép
+Chỉnh sửa
+package com.example.util;
 
-<action path="/login" type="com.example.action.LoginAction">
-    <forward name="success" path="/success.jsp"/>
-    <forward name="error" path="/error.jsp"/>
-</action>
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
+public class JPAUtil {
+    private static final EntityManagerFactory entityManagerFactory =
+            Persistence.createEntityManagerFactory("my-persistence-unit");
+
+    public static EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
+}
+(4) File MainApplication.java
+java
+Sao chép
+Chỉnh sửa
+package com.example;
+
+import com.example.entity.User;
+import com.example.util.JPAUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+
+public class MainApplication {
+    public static void main(String[] args) {
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        transaction.begin();
+
+        User user = new User();
+        user.setUsername("test_user");
+        user.setEmail("test@example.com");
+
+        entityManager.persist(user);
+        transaction.commit();
+
+        entityManager.close();
+        System.out.println("User inserted successfully!");
+    }
+}
