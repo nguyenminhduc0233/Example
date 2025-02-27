@@ -1,0 +1,93 @@
+spring-boot-starter-data-jpa-3.4.0.jar
+spring-boot-stater-3.4.0.jar
+spring-boot-3.4.0.jar
+spring-boot-autoconfigure-3.4.0.jar
+spring-boot-starter-logging-3.4.0.jar
+logback-classic-1.5.12.jar
+logback-core-1.5.12.jar
+log4j-to-slf4j-2.24.1.jar
+log4j-api-2.24.1.jar
+jul-to-slf4j-2.0.16.jar
+jakarta.annotation-api-2.1.1.jar
+snakeyaml-2.3.jar
+spring-boot-starter-jdbc-3.4.0.jar
+HikariCP-5.1.0.jar
+spring-jdbc-6.2.0.jar
+hibernate-core-6.6.2.Final.jar
+jakarta.persistence-api-3.1.0.jar
+jakarta.transaction-api-2.0.1.jar
+jboss-logging-3.6.1.Final.jar    #####
+hibernate-commons-annotations-7.0.3.Final.jar  #####
+jandex-3.2.0.jar  #####
+classmate-1.7.0.jar  #####
+byte-buddy-1.15.10.jar  #####
+jaxb-runtime-4.0.5.jar  #####
+jaxb-core-4.0.5.jar  #####
+angus-activation-2.0.2.jar  #####
+txw2-4.0.5.jar  #####
+istack-commons-runtime-4.1.2.jar  #####
+jakarta.inject-api-2.0.1.jar  #####
+antlr4-runtime-4.13.0.jar
+spring-data-jpa-3.4.0.jar
+spring-data-commons-3.4.0.jar
+spring-orm-6.2.0.jar
+spring-context-6.2.0.jar
+spring-aop-6.2.0.jar
+spring-tx-6.2.0.jar
+spring-beans-6.2.0.jar
+slf4j-api-2.0.16.jar
+spring-aspects-6.2.0.jar
+aspectjweaver-1.9.22.1.jar
+mysql-connector-j-8.0.31.jar
+spring-boot-starter-thymeleaf-3.4.0.jar
+thymeleaf-spring6-3.1.2.RELEASE.jar
+thymeleaf-3.1.2.RELEASE.jar
+attoparser-2.0.7.RELEASE.jar
+unbescape-1.1.6.RELEASE.jar
+spring-boot-starter-web-3.4.0.jar
+spring-boot-starter-json-3.4.0.jar
+jackson-databind-2.18.1.jar
+jackson-annotations-2.18.1.jar
+jackson-core-2.18.1.jar
+jackson-datatype-jdk8-2.18.1.jar
+jackson-datatype-jsr310-2.18.1.jar
+jackson-module-parameter-names-2.18.1.jar
+spring-boot-starter-tomcat-3.4.0.jar
+tomcat-embed-core-10.1.33.jar
+tomcat-embed-el-10.1.33.jar
+tomcat-embed-websocket-10.1.33.jar
+spring-web-6.2.0.jar
+micrometer-observation-1.14.1.jar
+micrometer-commons-1.14.1.jar
+spring-webmvc-6.2.0.jar
+spring-expression-6.2.0.jar
+spring-boot-starter-test-3.4.0.jar  #####
+spring-boot-test-3.4.0.jar  #####
+spring-boot-test-autoconfigure-3.4.0.jar  #####
+json-path-2.9.0.jar  #####
+jakarta.xml.bind-api-4.0.2.jar  #####
+jakarta.activation-api-2.1.3.jar  #####
+json-smart-2.5.1.jar  #####
+accessors-smart-2.5.1.jar  #####
+asm-9.6.jar  #####
+assertj-core-3.26.3.jar  #####
+awaitility-4.2.2.jar  ######
+hamcrest-2.2.jar  ######
+junit-jupiter-5.11.3.jar  #####
+junit-jupiter-api-5.11.3.jar #####
+opentest4j-1.3.0.jar  #####
+junit-platform-commons-1.11.3.jar  #####
+apiguardian-api-1.1.2.jar  #####
+junit-jupiter-params-5.11.3.jar  #####
+junit-jupiter-engine-5.11.3.jar  #####
+junit-platform-engine-1.11.3.jar  #####
+mockito-core-5.14.2.jar  #####
+byte-buddy-agent-1.15.10.jar  #####
+objenesis-3.3.jar  #####
+mockito-junit-jupiter-5.14.2.jar  #####
+jsonassert-1.5.3.jar  #####
+android-json-0.0.20131108.vaadin1.jar  #####
+spring-core-6.2.0.jar
+spring-jcl-6.2.0.jar
+spring-test-6.2.0.jar  #####
+xmlunit-core-2.10.0.jar  #####
