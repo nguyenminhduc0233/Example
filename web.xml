@@ -1,3 +1,4 @@
 @SpringBootApplication
 @PropertySource("file:resources/application.properties")
 @ComponentScan("com.example.controller")
+HikariCP-3.2.0
