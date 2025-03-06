@@ -1,0 +1,7 @@
+@GetMapping
+    public String dashboard(Model model) {
+        // Lấy thông tin người dùng hiện tại
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("username", authentication.getName()); // Gửi username qua view
+        return "dashboard"; // Trả về trang dashboard.html
+    }
