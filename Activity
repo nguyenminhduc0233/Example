@@ -5,3 +5,14 @@
         model.addAttribute("username", authentication.getName()); // Gửi username qua view
         return "dashboard"; // Trả về trang dashboard.html
     }
+
+1. Authentication là gì trong Spring Security?
+Trong Spring Security, Authentication là một interface đại diện cho thông tin xác thực của người dùng (ai đang đăng nhập, quyền hạn ra sao, v.v.). Khi một người dùng đăng nhập thành công, Spring Security sẽ tạo một Authentication object và lưu nó vào SecurityContext.
+
+Cấu trúc của Authentication
+Authentication chứa các thông tin chính:
+
+getName() → Lấy username.
+getCredentials() → Lấy mật khẩu (thường bị ẩn sau khi xác thực).
+getAuthorities() → Lấy danh sách quyền hạn của người dùng (ROLE_USER, ROLE_ADMIN, ...).
+isAuthenticated() → Kiểm tra người dùng đã đăng nhập hay chưa.
