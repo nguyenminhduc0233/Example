@@ -40,6 +40,10 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/", true)
                 .permitAll()
             )
+	    .rememberMe(remember -> remember
+		 .key("uniqueAndSecret") // Khóa bí mật để mã hóa cookie
+		 .tokenValiditySeconds(7 * 24 * 60 * 60) // Lưu trạng thái đăng nhập 7 ngày
+	    )
             .logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/music_login")
