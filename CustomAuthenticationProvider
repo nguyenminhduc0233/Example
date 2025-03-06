@@ -1,0 +1,38 @@
+package com.example.music_web.config;
+
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+
+@Component
+public class CustomAuthenticationProvider implements AuthenticationProvider {
+
+    // Hàm kiểm tra username và password của bạn
+    private boolean checkLogin(String username, String password) {
+        // Giả sử đây là hàm bạn đã có
+        return username.equals("admin") && password.equals("1234"); 
+    }
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String username = authentication.getName();
+        String password = authentication.getCredentials().toString();
+
+        // Kiểm tra username và password
+        if (checkLogin(username, password)) {
+            return new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList());
+        } else {
+            throw new BadCredentialsException("Sai tài khoản hoặc mật khẩu!");
+        }
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
+}
